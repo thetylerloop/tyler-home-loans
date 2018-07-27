@@ -20,6 +20,9 @@ with open('data/hmda_lar__smith_county__all_years.csv') as f:
         if row['owner_occupancy_name'] != 'Owner-occupied as a principal dwelling':
             continue
 
+        if row['loan_purpose_name'] != 'Home purchase':
+            continue
+
         if row['action_taken_name'] not in ['Loan originated', 'Application denied by financial institution']:
             continue
 
@@ -57,6 +60,8 @@ with open('data/hmda_lar__smith_county__all_years.csv') as f:
         else:
             row['race_ethnicity'] = 'Other or N/A'
 
+        row['census_tract_number_string'] = row['census_tract_number'].replace('.', '')
+
         output.append(row)
 
 
@@ -64,7 +69,8 @@ with open('data/hmda_lar__smith_county__all_years__filtered.csv', 'w') as f:
     writer = csv.DictWriter(f, fieldnames=reader.fieldnames + [
         'log_loan_amount_000s',
         'log_applicant_income_000s',
-        'race_ethnicity'
+        'race_ethnicity',
+        'census_tract_number_string'
     ])
     writer.writeheader()
 
